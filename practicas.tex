@@ -737,20 +737,187 @@ La gramática en Forma Normal de Chomsky quedaría de la siguiente manera:
 	\[P=\{S\rightarrow AA, A\rightarrow AA\mid YA\mid BA\mid 0, B\rightarrow YX, X\rightarrow 0, Y\rightarrow 1\}\]
 \end{enumerate}
 		
-\subsection{Ejercicio 2.} Observando las siguientes gramátcias, determinar cuáles de ellas son ambiguas y, en su caso, comprobar si los lenguajes generados son inherentemente ambiguos. Justificar la respuesta.
+\subsection{Ejercicio 2.} Observando las siguientes gramáticas, determinar cuáles de ellas son ambiguas y, en su caso, comprobar si los lenguajes generados son inherentemente ambiguos. Justificar la respuesta.
 	\begin{enumerate}[a)]
 		\item $S\rightarrow AbB, A\rightarrow aA\mid \epsilon, B\rightarrow aB\mid bB\mid \epsilon$
 		\item $S\rightarrow abaS\mid babS\mid baS\mid \epsilon$
-		\item $S\rightarrow aSa\mid \epsilon, A\rightarrow bA\mid \epsilon$
+		\item $S\rightarrow aSA\mid \epsilon, A\rightarrow bA\mid \epsilon$
 	\end{enumerate}
 \textit{\underline{Nota}: Explicar y demostrar cuidadosamente si la gramática no es ambigua (con lenguaje natural).}
 	\begin{enumerate}[a)]
-		\item 
+		\item En este caso, la gramática no es ambigua. En las producciones dadas, el símbolo inicial genera la producción $A$, el terminal $b$ y la producción $B$. Podría parecer ambigua debido a que tanto la producción $A$ como la $B$ generan un terminal $a$ seguido de otra producción.\\ \\
+		No obstante, no lo es por el siguiente motivo: las producciones $A$ y $B$ no tienen ninguna relación entre sí; esto es, cuando se utiliza la producción $A$, no hay forma de llegar a la producción $B$ y viceversa. Esto hace que los árboles que se generan para cada palabra, automáticamente, sean únicos, ya que en el símbolo inicial ambas producciones son convocadas y cada una puede solo puede llamarse recursivamente a ella misma.\\ \\
+		Comprobado que la gramática no es ambigua, el lenguaje por tanto tampoco es ambiguo.
+		\item Esta grámática sí es ambigua, ya que, por ejemplo, la palabra $ababababa$ puede ser generada con dos árboles distintos:
+		\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[sibling distance=2.5em, every node/.style = {shape=rectangle, rounded corners, draw=none, align=center}]]
+  			\node {S}
+    			child {node{a}}
+    			child {node{b}}
+    			child {node{a}}
+   	 			child {node {S}
+      				child {node {b}}
+      				child {node {a}}
+      				child {node {S}
+        				child {node {b}}
+        				child {node {a}}
+        				child {node {S} 
+        					child {node {b}}
+        					child {node {a}}
+        					child {node {S}
+        						child {node {$\epsilon$}}}}}};
+			\end{tikzpicture}
+		\end{figure}
+		\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[sibling distance=2.5em, every node/.style = {shape=rectangle, rounded corners, draw=none, align=center}]]
+  			\node {S}
+    			child {node{a}}
+    			child {node{b}}
+    			child {node{a}}
+   	 			child {node {S}
+      				child {node {b}}
+      				child {node {a}}
+      				child {node {b}}
+      				child {node {S}
+        				child {node {a}}
+        				child {node {b}}
+        				child {node {a}}
+        				child {node {S} 
+        					child {node {$\epsilon$}}}}};
+			\end{tikzpicture}
+		\end{figure}
+		
+	No obstante, el lenguaje no es ambiguo debido a que existe una gramática no ambigua que genera el mismo lenguaje. Esta nueva gramática se basa en ``no poder volver hacia atrás'', es decir, en el caso original, en el segundo árbol vemos como primero se utiliza la producción $abaS$ y en el tercer paso se vuelve a utilizar la misma, habiendo cambiado de producción entre el primer y el tercer paso. Con esta nueva gramática, una vez que se utiliza una producción, o bien se sigue utilizando esa hasta que se desee o bien no se utiliza, pero una vez que se cambia de producción no se puede volver atrás. De esta forma evitamos que la gramática sea ambigua.
+
+	Las producciones de la nueva gramática son:
+	\[P=\left\{\begin{array}{c}
+			S\rightarrow abaX\mid babY\mid baZ, \\
+			X\rightarrow abaX\mid Y\mid Z, \\
+			Y\rightarrow babY\mid Z, \\ 
+			Z\rightarrow baZ\mid \epsilon
+		\end{array}\right\}\]
+		\item Esta grámática también es ambigua, ya que la palabra $aabbb$ puede ser generada con dos árboles distintos:
+		\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[level distance=10mm] 
+  \tikzstyle{level 1}=[sibling distance=12mm] 
+  \tikzstyle{level 2}=[sibling distance=4mm] 
+  \tikzstyle{level 3}=[sibling distance=5mm][sibling distance=5em, every node/.style = {shape=rectangle, rounded corners, draw=none, align=center}, ]]
+  			\node {S}
+    			child {node{a}}
+   	 			child {node {S}
+      				child {node {a}}
+      				child {node {S}
+        				child {node {$\epsilon$}}}
+        			child {node {A}
+        				child {node {b}}
+        				child {node {A}
+        					child {node {b}}
+        					child {node {A}
+        						child {node {$\epsilon$}}}}}}
+        		child {node {A}
+        			child {node {b}}
+        			child {node {A}
+        				child {node {$\epsilon$}}}};
+			\end{tikzpicture}
+		\end{figure}
+		\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[level distance=10mm] 
+  \tikzstyle{level 1}=[sibling distance=12mm] 
+  \tikzstyle{level 2}=[sibling distance=4mm] 
+  \tikzstyle{level 3}=[sibling distance=5mm][sibling distance=5em, every node/.style = {shape=rectangle, rounded corners, draw=none, align=center}, ]]
+  			\node {S}
+    			child {node{a}}
+   	 			child {node {S}
+      				child {node {a}}
+      				child {node {S}
+        				child {node {$\epsilon$}}}
+        			child {node {A}
+        				child {node {$\epsilon$}}}}
+        		child {node {A}
+        			child {node {b}}
+        			child {node {A}
+        				child {node {b}}
+        				child {node {A}
+        					child {node {b}}
+        					child {node {A}
+        						child {node {$\epsilon$}}}}}};
+			\end{tikzpicture}
+		\end{figure}
+		
+	Pero, al igual que en el caso anterior, el lenguaje tampoco es ambiguo. Para crear una gramática no ambigua que genere el mismo lenguaje solo hay que ocuparse de que los árboles crezcan exclusivamente por la derecha (y no por el centro también, como es el caso) y obligar a que primero se introduzcan todas las $a$ y después todas las $b$.
+
+	Las producciones de esta nueva gramática son las que siguen:
+	\[P=\left\{\begin{array}{c}
+			S\rightarrow aXA, \\
+			X\rightarrow aX\mid A\mid \epsilon, \\
+			A\rightarrow bA\mid \epsilon
+		\end{array}\right\}\]
 	\end{enumerate}
 	
 \subsection{Ejercicio 3.} Encontrar el autómata que acepte el siguiente lenguaje $L$.
 \[L=\{0^i1^j0^k1\mid i+k=j; i,j,k\in \mathbb{N}\}\]
-Una vez diseñado el autómata, calcular la grmátcia libre de contexto que acepta $L$ eliminando posibles producciones inútiles que hayan ido apareciendo durante el proceso.
+Una vez diseñado el autómata, calcular la gramática libre de contexto que acepta $L$ eliminando posibles producciones inútiles que hayan ido apareciendo durante el proceso.\\
+
+Para poder utilizar un autómata que genere este lenguaje, es necesario que sea un autómata con pila para poder contar el número de 0 y de 1 que estamos introduciendo. \\
+
+Siguiendo el criterio de pila vacía, el autómata es el siguiente:
+
+	\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,scale = 1,transform shape]
+		\node[state,initial] (q0) {$q_0$}; 
+		\node[state] (q1) [right=of q0] {$q_1$};
+		\node[state] (q2) [right=of q1] {$q_2$};
+	
+		\draw 	(q0) edge[loop below] 
+				node{$ \begin{array}{c}
+						<0,R>/AR, \\
+						<0,A>/AA
+					\end{array}$} (q0)
+				(q0) edge[above]
+				node{$ \begin{array}{c}
+						<1,R>/BR, \\
+						<1,A>/ \epsilon
+					\end{array}$} (q1)
+				(q1) edge[loop below] 
+				node{$ \begin{array}{c}
+						<1,A>/ \epsilon, \\
+						<1,B>/BB
+					\end{array}$} (q1)
+				(q1) edge[above]
+				node{$ \begin{array}{c}
+						<0,B>/ \epsilon
+					\end{array}$} (q2)
+				(q2) edge[loop below] 
+				node{$ \begin{array}{c}
+						<0,B>/ \epsilon, \\
+						<0,R>/ \epsilon, \\
+						<1,\epsilon>/ \epsilon
+					\end{array}$} (q2);
+		\end{tikzpicture}
+	\end{figure}
+	
+El significado de los estados de autómata es el siguiente:
+\begin{itemize}
+	\item $q_0$: Se está recibiendo el primer bloque de 0.
+	\item $q_1$: Se están recibiendo los 1, según el número de 0 que ha habido insertados antes. Cuando se han insertado todos los 1 según los 0 previos, se inserta en la pila el número de 1 extra que se están añadiendo.
+	\item $q_2$: teniendo en cuenta el número de 1 extra que hemos añadido anteriormente, se añaden los 0 necesarios. Al final, cuando la pila ya está vacía, se añade el último 1.
+\end{itemize}
+
+Tras dibujar el autómata, extraeremos la gramática. El autómata queda tal que:
+\[M=(\{q_0,q_1,q_2\},\{0,1\},\{A,B,R,\epsilon\},\delta,q_0,R,\varnothing)\]
+donde
+	\[\begin{array}{c}
+		\delta(q_0,0,R)=\{(q_0,AR)\} \qquad \qquad \delta(q_1,1,B)=\{(q_1,BB)\}\\
+		\delta(q_0,0,A)=\{(q_0,AA)\} \qquad \qquad \delta(q_1,0,B)=\{(q_2, \quad \epsilon)\}\\
+		\delta(q_0,1,R)=\{(q_1,BR)\} \qquad \qquad \delta(q_2,0,B)=\{(q_2, \quad \epsilon)\}\\
+		\delta(q_0,1,A)=\{(q_1, \quad \epsilon)\} \qquad \qquad \delta(q_2,0,R)=\{(q_2, \quad \epsilon)\}\\
+		\delta(q_1,1,A)=\{(q_1,AA)\} \qquad \qquad \delta(q_2,1,\; \; \: \epsilon)=\{(q_2,\; \; \:\epsilon)\}
+	\end{array}\]
 
 \newpage
 
