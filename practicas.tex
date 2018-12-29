@@ -9,6 +9,7 @@
 \usepackage[export]{adjustbox}[2011/08/13]
 \usepackage{float}
 \restylefloat{table}
+\usepackage{booktabs}
 \usepackage[hidelinks]{hyperref} %Con opción para eliminar los bordes rojos
 \usepackage{titling}
 %\usepackage{minted}
@@ -17,6 +18,7 @@
 \usepackage{multicol}
 \usepackage[shortlabels]{enumitem}
 \usepackage{array}
+\usepackage{xcolor}
 \selectlanguage{english}
 
 %Para dibujar autómatas
@@ -565,6 +567,190 @@ El autómata por tanto es el que sigue:
 					(q3) edge[bend left, below] node{o/X, a/X, w/V} (q0);
 			\end{tikzpicture}
 		\end{figure}
+
+\newpage
+
+\section{Práctica 4: Ejercicios prácticos sobre minimización}
+\subsection{Ejercicio 1.} Dado el siguiente autómata responde a las siguientes cuestiones razonadamente:
+	\begin{enumerate}[a)]
+		\item ¿Habría alguna forma de optimizar el autómata para que reduciendo su complejidad siga aceptando exactamente el mismo lenguaje?
+		\item ¿Se podría obtener la gramática que genera este lenguaje en la Forma Normal de Chomsky? En caso afirmativo proporcionar dicha gramática en FNC. En caso contrario, justificar.
+	\end{enumerate}
+	\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,scale = 1,transform shape]
+			\node[state,initial,accepting] (q0)   {$q_0$}; 
+			\node[state,accepting] (q1) [above right=of q0] {$q_1$}; 
+			\node[state,accepting] (q2) [right=of q1] {$q_2$};
+			\node[state,accepting] (q3) [below right=of q0] {$q_3$};
+			\node[state] (q4) [below right=of q2] {$q_4$};
+			\node[state] (q5) [below right=of q1] {$q_5$};
+	
+			\draw 	(q0) edge[above] node{0} (q1)
+					(q0) edge[below] node{1} (q3)
+					(q1) edge[loop above] node{0} (q1)
+					(q1) edge[bend left, above] node{1} (q2)
+					(q2) edge[above] node{0} (q1)
+					(q2) edge[above] node{1} (q4)
+					(q3) edge[left] node{0} (q1)
+					(q3) edge[bend right, below] node{1} (q4)
+					(q4) edge[loop above] node{0,1} (q4)
+					(q5) edge[left] node{0} (q2)
+					(q5) edge[above] node{1} (q4);
+			\end{tikzpicture}
+		\end{figure}
+		
+\begin{enumerate}[a)]
+	\item El autómata se puede minimizar mediante el algoritmo de minimización. Los pasos son los siguientes:
+	\begin{enumerate}[1.]
+		\item Se eliminan los estados inaccesibles. En este autómata, como podemos observar, el estado $q_5$ es inaccesible, ya que a partir del estado inicial no se puede llegar a él de ninguna manera. Por tanto, lo eliminamos.
+		\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,scale = 1,transform shape]
+			\node[state,initial,accepting] (q0)   {$q_0$}; 
+			\node[state,accepting] (q1) [above right=of q0] {$q_1$}; 
+			\node[state,accepting] (q2) [right=of q1] {$q_2$};
+			\node[state,accepting] (q3) [below right=of q0] {$q_3$};
+			\node[state] (q4) [below right=of q2] {$q_4$};
+	
+			\draw 	(q0) edge[above] node{0} (q1)
+					(q0) edge[below] node{1} (q3)
+					(q1) edge[loop above] node{0} (q1)
+					(q1) edge[bend left, above] node{1} (q2)
+					(q2) edge[bend left, above] node{0} (q1)
+					(q2) edge[above] node{1} (q4)
+					(q3) edge[left] node{0} (q1)
+					(q3) edge[bend right, below] node{1} (q4)
+					(q4) edge[loop above] node{0,1} (q4);
+			\end{tikzpicture}
+		\end{figure}
+		\item Se comparan todas las parejas de estados para encontrar los estados indistinguibles (en la tabla, las casillas con un guión no son válidas).\\
+		\begin{enumerate}[I.]
+		\item Marcamos con una $X$ todas las casillas de la tabla en las que sabemos que los estados son distinguibles, como es el caso del estado 4 con el resto de estados. Esto se debe a que los demás estados son finales pero el 4 no lo es; por tanto, son distinguibles obligatoriamente.
+		\begin{figure}[H]
+		\centering
+				\begin{tabular}{|l|l|l|l|l|}
+				\hline
+				1 &  & - & - & - \\ \hline
+				2 &  &  & - & - \\ \hline
+				3 &  &  &  & - \\ \hline
+				4 & X & X & X & X \\ \hline
+			  	  & 0 & 1 & 2 & 3 \\ \hline
+				\end{tabular}
+		\end{figure}
+		\item Se comprueban todas las combinaciones de los demás estados con el estado 3. Tal y como se muestra en la segunda tabla, la pareja de estados (0,3) es distinguible, puesto que la pareja (3,4) es distinguible y dependían de ésta. La pareja (1,3) también es distinguible, puesto que dependía de la pareja (2,4), que hemos comprobado también que es distinguible. Por eso, tanto (0,3) como (1,3) se marcan con una $X$ en la tabla. No obstante, la pareja (2,3) no sabemos si es distinguible o no, y por tanto, dejamos la casilla sin marcar (con un signo de interrogación rojo).
+		\begin{figure}[H]
+		\centering
+			\begin{tabular}{l|ll}
+				  & 0 & 1 \\ \hline
+				0 & 1 & 3 \\
+				3 & 1 & 4 \\ \hline
+				1 & 1 & 2 \\
+				3 & 1 & 4 \\ \hline
+				2 & 1 & 4 \\
+				3 & 1 & 4
+			\end{tabular}
+		\end{figure}
+		\begin{figure}[H]
+		\centering
+				\begin{tabular}{|l|l|l|l|l|}
+				\hline
+				1 &  & - & - & - \\ \hline
+				2 &  &  & - & - \\ \hline
+				3 & X & X & \textcolor{red}{?} & - \\ \hline
+				4 & X & X & X & X \\ \hline
+			  	  & 0 & 1 & 2 & 3 \\ \hline
+				\end{tabular}
+		\end{figure}
+		\item Comprobamos ahora las combinaciones de todos los estados con el estado 2. La pareja (0,2) es distinguible puesto que depende de la pareja (3,4) y ésta, como hemos comprobado antes, es distinguible; por tanto, se marca la tabla con una $X$. De forma análoga, la pareja (1,2) también es distinguible porque depende de la pareja (2,4), anteriormente comprobada. 
+		\begin{figure}[H]
+		\centering
+			\begin{tabular}{l|ll}
+				  & 0 & 1 \\ \hline
+				0 & 1 & 3 \\
+				2 & 1 & 4 \\ \hline
+				1 & 1 & 2 \\
+				2 & 1 & 4 
+			\end{tabular}
+		\end{figure}
+		\begin{figure}[H]
+		\centering
+				\begin{tabular}{|l|l|l|l|l|}
+				\hline
+				1 &  & - & - & - \\ \hline
+				2 & X & X & - & - \\ \hline
+				3 & X & X & \textcolor{red}{?} & - \\ \hline
+				4 & X & X & X & X \\ \hline
+			  	  & 0 & 1 & 2 & 3 \\ \hline
+				\end{tabular}
+		\end{figure}
+		\item Por último, comprobamos la pareja que queda, la (0,1). Esta depende de la pareja (2,3), la cual no hemos podido marcar como distinguible. Por tanto, ambas parejas son indistinguibles.
+		
+		\begin{figure}[H]
+		\centering
+			\begin{tabular}{l|ll}
+				  & 0 & 1 \\ \hline
+				0 & 1 & 3 \\
+				1 & 1 & 2 
+			\end{tabular}
+		\end{figure}
+		\begin{figure}[H]
+		\centering
+				\begin{tabular}{|l|l|l|l|l|}
+				\hline
+				1 & \textcolor{red}{?} & - & - & - \\ \hline
+				2 & X & X & - & - \\ \hline
+				3 & X & X & \textcolor{red}{?} & - \\ \hline
+				4 & X & X & X & X \\ \hline
+			  	  & 0 & 1 & 2 & 3 \\ \hline
+				\end{tabular}
+		\end{figure}
+		
+Lo que significa que cada pareja se puede fusionar en un estado, ya que:
+		\[q_0\equiv q_1\]
+		\[q_2\equiv q_3\]
+		\end{enumerate}
+		\item Se lleva a cabo la minimización.
+		\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,scale = 1,transform shape]
+			\node[state,initial,accepting] (q0)   {$\{q_0,q_1\}$}; 
+			\node[state,accepting] (q1) [right=of q0] {$\{q_2,q_3\}$};
+			\node[state] (q4) [below=of q1] {$q_4$};
+	
+			\draw 	(q0) edge[loop above] node{0} (q0)
+					(q0) edge[bend left, above] node{1} (q1)
+					(q1) edge[bend left, below] node{0} (q0)
+					(q1) edge[right] node{1} (q4)
+					(q4) edge[loop left] node{0,1} (q4);
+			\end{tikzpicture}
+		\end{figure}
+	\end{enumerate}
+	\item La gramática que da lugar al lenguaje que acepta este autómata es la siguiente:
+	\[V=\{S,A,B\}\]
+	\[T=\{0,1\}\]
+	\[P=\{S\rightarrow A\mid B\mid \epsilon, A\rightarrow AA\mid B\mid 0\mid \epsilon, B\rightarrow 1A\mid 1\}\]
+	\[S=\{S\}\]
+Esta gramática puede ponerse en forma normal de Chomsky, eliminando las producciones nulas que hay y transformando las reglas para que esté de la forma $R_1\rightarrow R_2R_3$ ó $R_1\rightarrow c$, donde $R_1, R_2$ y $R_3$ son producciones y $c$ es un símbolo terminal.\\
+
+La gramática en Forma Normal de Chomsky quedaría de la siguiente manera:
+	\[P=\{S\rightarrow AA, A\rightarrow AA\mid YA\mid BA\mid 0, B\rightarrow YX, X\rightarrow 0, Y\rightarrow 1\}\]
+\end{enumerate}
+		
+\subsection{Ejercicio 2.} Observando las siguientes gramátcias, determinar cuáles de ellas son ambiguas y, en su caso, comprobar si los lenguajes generados son inherentemente ambiguos. Justificar la respuesta.
+	\begin{enumerate}[a)]
+		\item $S\rightarrow AbB, A\rightarrow aA\mid \epsilon, B\rightarrow aB\mid bB\mid \epsilon$
+		\item $S\rightarrow abaS\mid babS\mid baS\mid \epsilon$
+		\item $S\rightarrow aSa\mid \epsilon, A\rightarrow bA\mid \epsilon$
+	\end{enumerate}
+\textit{\underline{Nota}: Explicar y demostrar cuidadosamente si la gramática no es ambigua (con lenguaje natural).}
+	\begin{enumerate}[a)]
+		\item 
+	\end{enumerate}
+	
+\subsection{Ejercicio 3.} Encontrar el autómata que acepte el siguiente lenguaje $L$.
+\[L=\{0^i1^j0^k1\mid i+k=j; i,j,k\in \mathbb{N}\}\]
+Una vez diseñado el autómata, calcular la grmátcia libre de contexto que acepta $L$ eliminando posibles producciones inútiles que hayan ido apareciendo durante el proceso.
 
 \newpage
 
