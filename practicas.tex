@@ -24,6 +24,8 @@
 %Para dibujar autómatas
 \usepackage{tikz}
 \usetikzlibrary{automata,positioning,arrows}
+\tikzset{elliptic state/.style={draw,ellipse}}
+\usetikzlibrary{shapes,shapes.geometric,arrows,fit,calc,positioning,automata,}
 
 %Opciones de encabezado y pie de página:
 \usepackage{fancyhdr}
@@ -789,22 +791,269 @@ La gramática en Forma Normal de Chomsky quedaría de la siguiente manera:
 			\end{tikzpicture}
 		\end{figure}
 		
-	No obstante, el lenguaje no es ambiguo debido a que existe una gramática no ambigua que genera el mismo lenguaje. Esta nueva gramática se basa en ``no poder volver hacia atrás'', es decir, en el caso original, en el segundo árbol vemos como primero se utiliza la producción $abaS$ y en el tercer paso se vuelve a utilizar la misma, habiendo cambiado de producción entre el primer y el tercer paso. Con esta nueva gramática, una vez que se utiliza una producción, o bien se sigue utilizando esa hasta que se desee o bien no se utiliza, pero una vez que se cambia de producción no se puede volver atrás. De esta forma evitamos que la gramática sea ambigua.
+	No obstante, el lenguaje no es ambiguo debido a que existe una gramática no ambigua que genera el mismo lenguaje. Esta nueva gramática se puede obtener pasando el autómata a AFD y extrayendo la gramática. Esto se puede a hacer debido a que la gramática es regular. El procedimiento es el siguiente:
+	\begin{enumerate}[I.]
+		\item Se extrae el autómata:
+		\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.5cm,scale = 1,transform shape]
+			\node[state,initial] (q0) {$S$}; 
+			\node[state] (q1) [right=of q0] {$abaS$};
+			\node[state] (q2) [right=of q1] {$baS$};
+			\node[state] (q3) [right=of q2] {$aS$};
+			\node[state,accepting] (q4) [below=of q0] {$\epsilon$};
+			\node[state] (q5) [right=of q4] {$babS$};
+			\node[state] (q6) [right=of q5] {$abS$};
+			\node[state] (q7) [right=of q6] {$bS$};
+			\node[state] (q8) [right=of q7] {$q8$};
+	
+			\draw 	(q0) edge[above] node{$\epsilon$} (q1)
+					(q0) edge[below] node{$\epsilon$} (q5)
+					(q0) edge[left] node{$\epsilon$} (q4)
+					(q0) edge[bend left, above] node[very near end]{$\epsilon$} (q2)
+					(q1) edge[above] node{a} (q2)
+					(q1) edge[above] node{b} (q8)
+					(q2) edge[above] node{b} (q3)
+					(q2) edge[above] node{a} (q8)
+					(q3) edge[bend right, above] node{a} (q0)
+					(q3) edge[right] node{b} (q8)
+					(q5) edge[above] node{b} (q6)
+					(q5) edge[bend right, below] node{a} (q8)
+					(q6) edge[above] node{a} (q7)
+					(q6) edge[bend right, below] node[very near start]{b} (q8)
+					(q7) edge[above] node{b} (q0)
+					(q7) edge[above] node{a} (q8);
+			\end{tikzpicture}
+		\end{figure}
+		Con el siguiente significado en cada estado:
+		\begin{itemize}
+			\item $S$: aún no se ha recibido nada o ya se ha recibido una cadena.
+			\item $abaS$: es un estado pseudo-inicial, en el que se busca la cadena $aba$.
+			\item $ba$: este estado significa dos cosas: o bien es un estado pseudo-inicial que busca la cadena $baS$ o bien ya se ha leído la primera $a$ de la cadena $abaS$.
+			\item $aS$: se llega a este estado cuando se ha leído una $b$.
+			\item $babS$: es el estado pseudo-inicial para buscar la cadena $babS$.
+			\item $abS$: se acaba de leer una $b$ de la cadena $babS$.
+			\item $bS$: se ha leído la $a$ de la cadena $babS$.
+			\item $q8$: es el estado de error. Se llega a este siempre que entre en un estado un caracter que con el que no puede avanzar.
+			\item $\epsilon$: es el estado de aceptación de la palabra generada. Acepta la cadena vacía.
+		\end{itemize}
+		\item Se transforma en AFND en un AFD (en este caso se ha hecho directamente, si utilizar una tabla de estados):
+		\begin{figure}[H]
+		\centering
+			\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,scale = 1,transform shape]
+			\node[elliptic state,initial,accepting] (q0) {$\{S,abaS,baS,babS,\epsilon\}$}; 
+			\node[elliptic state] (q1) [right=of q0] {$\{baS,q8\}$};
+			\node[elliptic state] (q2) [right=of q1] {$\{aS\}$};
+			\node[elliptic state] (q3) [below=of q0] {$\{aS,abS,q8\}$};
+			\node[elliptic state,accepting] (q4) [below=of q3] {$\{S,abaS,baS,babS,\epsilon, bS,q8\}$};
+			\node[elliptic state,accepting] (q5) [right=of q4] {$\{S,abaS,baS,babS,\epsilon, aS,abS,q8\}$};
+			\node[elliptic state,accepting] (q6) [below=of q5] {$\{S,abaS,baS,babS,\epsilon, bS,q8\}$};
+			\node[elliptic state] (q7) [below right=of q1] {$q8$};
+	
+			\draw 	(q0) edge[above] node{a} (q1)
+					(q0) edge[left] node{b} (q3)
+					(q1) edge[above] node{b} (q2)
+					(q1) edge[below] node{a} (q7)
+					(q2) edge[bend right,above] node{a} (q0)
+					(q2) edge[right] node{b} (q7)
+					(q3) edge[left] node{a} (q4)
+					(q3) edge[above] node{b} (q7)
+					(q4) edge[above] node{b} (q5)
+					(q4) edge[below] node[very near start]{a} (q1)
+					(q5) edge[bend right,left] node{a} (q6)
+					(q5) edge[above] node{b} (q3)
+					(q6) edge[bend right,right] node{b} (q5)
+					(q6) edge[above] node{a} (q4)
+					(q7) edge[loop right] node{a,b} (q7);
+			\end{tikzpicture}
+		\end{figure}
+		\item Se minimiza el AFD obtenido.
+			\begin{enumerate}[i.]
+				\item Se comprueban los estados finales con los que no son finales. Estas parejas de estados siempre van a ser distinguibles, por tanto, se marcan con una $X$ en la tabla (los guiones indican que no son casillas válidas).
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{|l|l|l|l|l|l|l|l|}
+					\hline
+					1 & X & - & - & - & - & - & - \\ \hline
+					2 & X &   & - & - & - & - & - \\ \hline
+					3 & X &   &   & - & - & - & - \\ \hline
+					4 &   & X & X & X & - & - & - \\ \hline
+					5 &	  & X & X & X &   & - & - \\ \hline
+					6 &   & X & X & X &   &   & - \\ \hline
+					7 & X &   &   &   & X & X & X \\ \hline
+			  		  & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+					\end{tabular}
+				\end{figure}
+				\item Ahora se comparan los estados restantes entre sí para eliminar los que son distinguibles de la lista. Comenzamos examinando la fila del $7$. En este caso, la pareja $(1,7)$ es dependiente del valor de la pareja $(2,7)$, calculado posteriormente. Una vez que hemos comprobado que la pareja $(2,7)$ es distinguible, automáticamente la pareja $(1,7)$ también lo es.
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{l|ll}
+					  & a & b \\ \hline
+					1 & 7 & 2 \\
+					7 & 7 & 7 \\ \hline
+					2 & 0 &   \\
+					7 & 7 &   \\ \hline
+					3 & 4 &   \\
+					7 & 7 & 
+					\end{tabular}
+				\end{figure}
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{|l|l|l|l|l|l|l|l|}
+					\hline
+					1 & X & - & - & - & - & - & - \\ \hline
+					2 & X &   & - & - & - & - & - \\ \hline
+					3 & X &   &   & - & - & - & - \\ \hline
+					4 &   & X & X & X & - & - & - \\ \hline
+					5 &	  & X & X & X &   & - & - \\ \hline
+					6 &   & X & X & X &   &   & - \\ \hline
+					7 & X & X & X & X & X & X & X \\ \hline
+			  		  & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+					\end{tabular}
+				\end{figure}
+				\item Se comparan ahora los de la fila del $6$.
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{l|ll}
+					  & a & b \\ \hline
+					0 & 1 &   \\
+					6 & 4 &   \\ \hline
+					1 & 1 &   \\
+					6 & 4 &   \\ \hline
+					2 & 6 &   \\
+					6 & 4 & 
+					\end{tabular}
+				\end{figure}
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{|l|l|l|l|l|l|l|l|}
+					\hline
+					1 & X & - & - & - & - & - & - \\ \hline
+					2 & X &   & - & - & - & - & - \\ \hline
+					3 & X &   &   & - & - & - & - \\ \hline
+					4 &   & X & X & X & - & - & - \\ \hline
+					5 &	  & X & X & X &   & - & - \\ \hline
+					6 & X & X & X & X & X & X & - \\ \hline
+					7 & X & X & X & X & X & X & X \\ \hline
+			  		  & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+					\end{tabular}
+				\end{figure}
+				\item Se comparan los de la fila del $5$.
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{l|ll}
+					  & a & b \\ \hline
+					0 & 1 &   \\
+					5 & 6 &   \\ \hline
+					4 & 1 &   \\
+					5 & 6 &   \\ 
+					\end{tabular}
+				\end{figure}
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{|l|l|l|l|l|l|l|l|}
+					\hline
+					1 & X & - & - & - & - & - & - \\ \hline
+					2 & X &   & - & - & - & - & - \\ \hline
+					3 & X &   &   & - & - & - & - \\ \hline
+					4 &   & X & X & X & - & - & - \\ \hline
+					5 &	X & X & X & X & X & - & - \\ \hline
+					6 & X & X & X & X & X & X & - \\ \hline
+					7 & X & X & X & X & X & X & X \\ \hline
+			  		  & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+					\end{tabular}
+				\end{figure}
+				\item Se comparan los de la fila del $4$.
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{l|ll}
+					  & a & b \\ \hline
+					0 & 1 & 3 \\
+					4 & 1 & 5 \\ 
+					\end{tabular}
+				\end{figure}
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{|l|l|l|l|l|l|l|l|}
+					\hline
+					1 & X & - & - & - & - & - & - \\ \hline
+					2 & X &   & - & - & - & - & - \\ \hline
+					3 & X &   &   & - & - & - & - \\ \hline
+					4 & X & X & X & X & - & - & - \\ \hline
+					5 &	X & X & X & X & X & - & - \\ \hline
+					6 & X & X & X & X & X & X & - \\ \hline
+					7 & X & X & X & X & X & X & X \\ \hline
+			  		  & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+					\end{tabular}
+				\end{figure}
+				\item Se comparan los de la fila del $3$.
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{l|ll}
+					  & a & b \\ \hline
+					1 & 7 &   \\
+					3 & 4 &   \\ \hline
+					2 & 0 &   \\
+					3 & 4 &   \\ 
+					\end{tabular}
+				\end{figure}
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{|l|l|l|l|l|l|l|l|}
+					\hline
+					1 & X & - & - & - & - & - & - \\ \hline
+					2 & X &   & - & - & - & - & - \\ \hline
+					3 & X & X & X & - & - & - & - \\ \hline
+					4 & X & X & X & X & - & - & - \\ \hline
+					5 &	X & X & X & X & X & - & - \\ \hline
+					6 & X & X & X & X & X & X & - \\ \hline
+					7 & X & X & X & X & X & X & X \\ \hline
+			  		  & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+					\end{tabular}
+				\end{figure}
+				\item Por último la fila del $2$.
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{l|ll}
+					  & a & b \\ \hline
+					1 & 7 &   \\
+					2 & 0 &   \\ 
+					\end{tabular}
+				\end{figure}
+				\begin{figure}[H]
+				\centering
+					\begin{tabular}{|l|l|l|l|l|l|l|l|}
+					\hline
+					1 & X & - & - & - & - & - & - \\ \hline
+					2 & X & X & - & - & - & - & - \\ \hline
+					3 & X & X & X & - & - & - & - \\ \hline
+					4 & X & X & X & X & - & - & - \\ \hline
+					5 &	X & X & X & X & X & - & - \\ \hline
+					6 & X & X & X & X & X & X & - \\ \hline
+					7 & X & X & X & X & X & X & X \\ \hline
+			  		  & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+					\end{tabular}
+				\end{figure}
+			\end{enumerate}
+			\item Como hemos podido comprobar, todos los estados son distinguibles, lo que significa que el autómata previamente creado es, de hecho, el minimal. Lo único que queda es extraer la gramática, la cuál es:
+			\[\begin{array}{c}
+		q_0\rightarrow aq_1\mid bq_3 \qquad \qquad q_4\rightarrow aq_1\mid bq_5\\
+		q_1\rightarrow aq_7\mid bq_2 \qquad \qquad q_5\rightarrow aq_6\mid bq_3\\
+		q_2\rightarrow aq_0\mid bq_7 \qquad \qquad q_6\rightarrow aq_4\mid bq_5\\
+		q_3\rightarrow aq_4\mid bq_7 \qquad \qquad q_7\rightarrow aq_7\mid bq_7\\
+	\end{array}\]
+			Con esta gramática, comprobamos que el lenguaje no es inherentemente ambiguo debido a que esta gramática no es ambigua pero genera el mismo lenguaje que la dada.
+	\end{enumerate}
+	
+\newpage
 
-	Las producciones de la nueva gramática son:
-	\[P=\left\{\begin{array}{c}
-			S\rightarrow abaX\mid babY\mid baZ, \\
-			X\rightarrow abaX\mid Y\mid Z, \\
-			Y\rightarrow babY\mid Z, \\ 
-			Z\rightarrow baZ\mid \epsilon
-		\end{array}\right\}\]
 		\item Esta grámática también es ambigua, ya que la palabra $aabbb$ puede ser generada con dos árboles distintos:
 		\begin{figure}[H]
 		\centering
 			\begin{tikzpicture}[level distance=10mm] 
   \tikzstyle{level 1}=[sibling distance=12mm] 
   \tikzstyle{level 2}=[sibling distance=4mm] 
-  \tikzstyle{level 3}=[sibling distance=5mm][sibling distance=5em, every node/.style = {shape=rectangle, rounded corners, draw=none, align=center}, ]]
+  \tikzstyle{level 3}=[sibling distance=4mm][sibling distance=5em, every node/.style = {shape=rectangle, rounded corners, draw=none, align=center}, ]]
   			\node {S}
     			child {node{a}}
    	 			child {node {S}
