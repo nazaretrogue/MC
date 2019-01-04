@@ -127,7 +127,7 @@
 \newpage
 
 \section{Práctica 1: Ejercicios prácticos sobre Lenguajes y Gramáticas}
-\subsection{Ejercicio 1.} Calcula una gramática libre de contexto que genere el lenguaje $\mathcal{L}=\{a^nb^mc^md^{2n}$ tal que $n,m\geq 0\}$.
+\subsection{Ejercicio 1.} Calcula una gramática libre de contexto que genere el lenguaje $\mathcal{L}=\{a^nb^mc^md^{2n}$ tal que $n,m\geq 0\}$.\\
 
 La gramática que he creado utiliza 3 variables, que son las siguientes:
 	\[V=\{X,Y,S\}\]
@@ -201,7 +201,7 @@ La gramática libre de contexto generada tiene la siguiente tupla:
 			\item Con las producciones $X, Y, E$ y $D$ nos encargamos de que los 0 y los 1 sean distintos, y hay tantas variables porque hay dos posibilidades: o hay más 0 que 1 o viceversa. Las producciones $X$ e $Y$ se encargan de que haya más 1 que 0. Las producciones $D$ y $E$, de que haya más 0.
 			\item La producción $Z$ se encarga de añadir todos los 2 deseados en el primer conjunto de palabras producidas por la gramática, es decir, añade los 2 cuando lo que se está teniendo en cuenta es que $i \not = j$.
 			\item La producción $A$ se encarga de añadir todos los 0 que se deseen pero en el otro conjunto posible de palabras generadas por la gramática, es decir, cuando se está contando $j\not = k$. Es decir, esta producción es similar a la $Z$ pero para la vertiente contraria.
-			\item Las producciones $B, C, G$ y $F$ contamos los 1 y 2 que estamos añadiendo, teniendo en cuenta, que al igual que en el caso anterior, hay dos posibilidades: que haya más 1 que 2, de lo que se encargan las producciones $G$ y $F$, o que haya más 2 que 1, de lo que se encargan las producciones $B$ y $C$.
+			\item Con las producciones $B, C, G$ y $F$ contamos los 1 y 2 que estamos añadiendo, teniendo en cuenta, que al igual que en el caso anterior, hay dos posibilidades: que haya más 1 que 2, de lo que se encargan las producciones $G$ y $F$, o que haya más 2 que 1, de lo que se encargan las producciones $B$ y $C$.
 		\end{itemize}
 		\item El símbolo inicial $S=\{S\}$.
 	\end{itemize}
@@ -217,9 +217,9 @@ La gramática libre de contexto generada tiene la siguiente tupla:
 	
 Por ejemplo, la cadena terminal \textit{“gfddddfffpdddfx”} representa que el nivel tiene (\textit{gfddddfff}) un grupo grande con un monstruo fuerte, 4 débiles y otros 3 fuertes; después tiene (\textit{pddddf}) un grupo pequeño con 3 débiles y uno fuerte.\\
 
-Elaborar una gramática que genere estos niveles con sus restricciones. Cada palabra del lenguaje es un solo nivel. ¿A qué tipo de gramática dentro de la jerarquía de Chomsky pertenece la gramática diseñada.\\
+Elaborar una gramática que genere estos niveles con sus restricciones. Cada palabra del lenguaje es un solo nivel. ¿A qué tipo de gramática dentro de la jerarquía de Chomsky pertenece la gramática diseñada?\\
 
-¿Sería posible diseñar una gramática de tipo 3 para dicho problema?
+¿Sería posible diseñar una gramática de tipo 3 para dicho problema?\\
 
 Para cumplir con las restricciones, he creado la siguiente gramática:
 	\begin{itemize}
@@ -251,7 +251,7 @@ Para cumplir con las restricciones, he creado la siguiente gramática:
 			\item La primera producción, $S\rightarrow Gx$, da lugar a niveles que tienen un grupo grande y añade al final la sala de recompensas.
 			\item La segunda, $S\rightarrow Px$, que crea niveles en los que no hay grupo grande, ya que tal y como yo lo entiendo, puede haber niveles en los que solo haya grupos grandes o grupos pequeños. Al igual que la anterior, añade al final la sala de recompensas.
 			\item Las tercera y cuarta son $G\rightarrow gfdXP \mid gdfXP$, que crea un grupo grande con los los dos primeros monstruos en cualquier orden, pero obligando a que haya uno débil y otro fuerte. Tras esto se pueden añadir más monstruos débiles y fuertes, o añadir un grupo pequeño al nivel.
-			\item La quinta producción, con la forma $X\rightarrow dX$, introduce todos los monstrueos débiles que se deseen.
+			\item La quinta producción, con la forma $X\rightarrow dX$, introduce todos los monstruos débiles que se deseen.
 			\item La sexta y séptima, $X\rightarrow Y \mid \epsilon$, introducen monstruos fuertes o finalizan el nivel respectivamente.
 			\item Las dos que siguen, $Y\rightarrow fY \mid \epsilon$, insertan todos los monstruos fuertes que se deseen o finaliza el nivel, respectivamente.
 			\item La siguiente, $P\rightarrow pA \mid \epsilon$, crea un grupo pequeño donde se introduce 0 o 1 monstruo fuerte y monstruos débiles o finaliza el nivel sin introducir un grupo pequeño.
@@ -349,6 +349,8 @@ Paras que los autómatas sean deterministas, deben estar definidas todas las tra
 			\end{tikzpicture}
 		\end{figure}
 		
+\newpage
+
 		\item El significado de los estados es el siguiente:
 		\begin{itemize}
 			\item $q_0$: es el estado inicial, cuando aún no se ha recibido ningún elemento de la subcadena, o bien, actua como aceptor de la $y$ cuando el número de apariciones de la subcadena es par.
@@ -382,17 +384,17 @@ Paras que los autómatas sean deterministas, deben estar definidas todas las tra
 
 \subsection{Ejercicio 2.} En el alfabeto {0,1}, construir un AFND que acepte cada uno de los siguientes lenguajes:
 	\begin{enumerate}[a)]
-		\item El lenguaje de las palabras que empiezsan en 1 y terminan en 010.
+		\item El lenguaje de las palabras que empiezan en 1 y terminan en 010.
 		\item El lenguaje de las palabras que empiezan o terminan (o ambas cosas) en 101.
 		\item El lenguaje de las palabras que contienen, simultáneamente, las subcadenas 0101 y 100. El AFDN	también acepta las cadenas en las que las subcadenas están solapadas (por ejemplo, ``010100'' y ``100101'' serían palabras aceptadas).
 	\end{enumerate}
 	
-En este caso, los autómatas no tienen que tener todas las transiciones definidas, solo las que no interesan, y pueden contener trasnsiciones nulas. El diseño de cada autómata es el siguiente:
+En este caso, los autómatas no tienen que tener todas las transiciones definidas, solo las que nos interesan, y pueden contener trasnsiciones nulas. El diseño de cada autómata es el siguiente:
 	\begin{enumerate}[a)]
 		\item Los estados de este autómata se definen como sigue:
 		\begin{itemize}
 			\item $q_0$: cuando aún no se ha recibido ningún elemento de la subcadena.
-			\item $q_1$: el primer $1$ ya ha sido recibido. A partir de aquí, se pueden recibir tantos símbolos comose quiera, teniendo en cuenta que debe acabar por la subcadena $010$.
+			\item $q_1$: el primer $1$ ya ha sido recibido. A partir de aquí, se pueden recibir tantos símbolos como se quiera, teniendo en cuenta que debe acabar por la subcadena $010$.
 			\item $q_2$: se ha recibido el primer $0$ de la subcadena.
 			\item $q_3$: el $1$ de la subcadena ya ha sido recibido. La subcadena hasta el momento es $01$.
 			\item $q_4$: Se ha recibido el último símbolo de la subcadena y de la palabra, el $0$. Este estado finaliza y acepta las palabras que han llegado hasta ahí.
@@ -521,7 +523,7 @@ En este caso, los autómatas no tienen que tener todas las transiciones definida
 
 El diseño que he llevado a cabo es una máquina de Mealy con dos estados. El complemento a dos mantiene todos los bits iguales hasta el primer $1$ (incluido) y a partir de éste, invierte los bits restantes. Por ejemplo:
 	\[Complemento_2(101110100) = 010001100\]
-Por tanto, teniendo esto en cuenta, los significados de cada estado son:
+Por tanto, teniendo ésto en cuenta, los significados de cada estado son:
 	\begin{itemize}
 		\item $q_0$: se reciben todos los $0$ que se siguen codificando como $0$. Cuando llega el primer $1$, se codifica como $1$ y se pasa al estado $q_1$.
 		\item $q_1$: se reciben los restantes símbolos de la palabra: los $0$ se codifican como $1$ y los $1$ como $0$.
@@ -540,7 +542,7 @@ El diseño del autómata es el siguiente:
 		\end{tikzpicture}
 	\end{figure}
 	
-\subsection{Ejercicio 4.} Diseñar una Máquina de Mealy o de Moore que, dada una cadena usando el alfabeto $A={a,w,o}$, encienda un led verde (salida $V$) cada vez que se detecte la cadena ``$woow$'' en la entrada, apagándolo cuando lea cualquier otro símbolo después de esta cadena (representamos el led apagado con la salida ``$X$''). El autómata tiene que encender el led verde (salida $V$), tantas veces como aparezca en la secuencia ``$woow$'' en la entrada, y esta secuencia puede estar solapada.
+\subsection{Ejercicio 4.} Diseñar una Máquina de Mealy o de Moore que, dada una cadena usando el alfabeto $A={a,w,o}$, encienda un led verde (salida $V$) cada vez que se detecte la cadena ``$woow$'' en la entrada, apagándolo cuando lea cualquier otro símbolo después de esta cadena (representamos el led apagado con la salida ``$X$''). El autómata tiene que encender el led verde (salida $V$), tantas veces como aparezca en la secuencia ``$woow$'' en la entrada, y esta secuencia puede estar solapada.\\
 
 He diseñado una máquina de Mealy con 4 estados para controlar cuando llega la cadena y poder encender el led. El significado de los estados es:
 	\begin{itemize}
@@ -837,7 +839,7 @@ La gramática en Forma Normal de Chomsky quedaría de la siguiente manera:
 			\item $q8$: es el estado de error. Se llega a este siempre que entre en un estado un caracter que con el que no puede avanzar.
 			\item $\epsilon$: es el estado de aceptación de la palabra generada. Acepta la cadena vacía.
 		\end{itemize}
-		\item Se transforma en AFND en un AFD (en este caso se ha hecho directamente, si utilizar una tabla de estados):
+		\item Se transforma el AFND en un AFD (en este caso se ha hecho directamente, si utilizar una tabla de estados):
 		\begin{figure}[H]
 		\centering
 			\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,scale = 1,transform shape]
@@ -1129,12 +1131,12 @@ Siguiendo el criterio de pila vacía, el autómata es el siguiente:
 					\end{array}$} (q0)
 				(q0) edge[above]
 				node{$ \begin{array}{c}
-						<1,R>/BR, \\
 						<1,A>/ \epsilon
 					\end{array}$} (q1)
 				(q1) edge[loop below] 
 				node{$ \begin{array}{c}
 						<1,A>/ \epsilon, \\
+						<1,R>/BR, \\
 						<1,B>/BB
 					\end{array}$} (q1)
 				(q1) edge[above]
@@ -1144,8 +1146,7 @@ Siguiendo el criterio de pila vacía, el autómata es el siguiente:
 				(q2) edge[loop below] 
 				node{$ \begin{array}{c}
 						<0,B>/ \epsilon, \\
-						<0,R>/ \epsilon, \\
-						<1,\epsilon>/ \epsilon
+						<1,R>/ \epsilon
 					\end{array}$} (q2);
 		\end{tikzpicture}
 	\end{figure}
@@ -1163,10 +1164,89 @@ donde
 	\[\begin{array}{c}
 		\delta(q_0,0,R)=\{(q_0,AR)\} \qquad \qquad \delta(q_1,1,B)=\{(q_1,BB)\}\\
 		\delta(q_0,0,A)=\{(q_0,AA)\} \qquad \qquad \delta(q_1,0,B)=\{(q_2, \quad \epsilon)\}\\
-		\delta(q_0,1,R)=\{(q_1,BR)\} \qquad \qquad \delta(q_2,0,B)=\{(q_2, \quad \epsilon)\}\\
-		\delta(q_0,1,A)=\{(q_1, \quad \epsilon)\} \qquad \qquad \delta(q_2,0,R)=\{(q_2, \quad \epsilon)\}\\
-		\delta(q_1,1,A)=\{(q_1,AA)\} \qquad \qquad \delta(q_2,1,\; \; \: \epsilon)=\{(q_2,\; \; \:\epsilon)\}
+		\delta(q_0,1,A)=\{(q_1, \quad \epsilon)\} \qquad \qquad \delta(q_2,0,B)=\{(q_2, \quad \epsilon)\}\\
+		\delta(q_1,1,A)=\{(q_1, \quad \epsilon)\} \qquad \qquad \delta(q_2,1,R)=\{(q_2, \quad \epsilon)\}\\
+		\delta(q_1,1,R)=\{(q_1,BR)\} \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad
 	\end{array}\]
+	
+Por tanto, las producciones de la gramática son:
+	\begin{equation*}
+	\begin{aligned}[c]
+	  S\rightarrow [q_0,R,q_0] \qquad \qquad \qquad \qquad \\
+	  S\rightarrow [q_0,R,q_1] \qquad \qquad \qquad \qquad \\
+	  S\rightarrow [q_0,R,q_2] \qquad \qquad \qquad \qquad \\
+	  [q_0,R,q_0]\rightarrow 0[q_0,A,q_0][q_0,R,q_0]\\
+	  [q_0,R,q_1]\rightarrow 0[q_0,A,q_0][q_0,R,q_1]\\
+	  [q_0,R,q_2]\rightarrow 0[q_0,A,q_0][q_0,R,q_2]\\
+	  [q_0,R,q_0]\rightarrow 0[q_0,A,q_1][q_1,R,q_0]\\
+	  [q_0,R,q_1]\rightarrow 0[q_0,A,q_1][q_1,R,q_1]\\
+	  [q_0,R,q_2]\rightarrow 0[q_0,A,q_1][q_1,R,q_2]\\
+	  [q_0,R,q_0]\rightarrow 0[q_0,A,q_2][q_2,R,q_0]\\
+	  [q_0,R,q_1]\rightarrow 0[q_0,A,q_2][q_2,R,q_1]\\
+	  [q_0,R,q_2]\rightarrow 0[q_0,A,q_2][q_2,R,q_2]\\
+	  [q_0,A,q_0]\rightarrow 0[q_0,A,q_0][q_0,A,q_0]\\
+	  [q_0,A,q_1]\rightarrow 0[q_0,A,q_0][q_0,A,q_1]\\
+	  [q_0,A,q_2]\rightarrow 0[q_0,A,q_0][q_0,A,q_2]\\
+	  [q_0,A,q_0]\rightarrow 0[q_0,A,q_1][q_1,A,q_0]\\
+	  [q_0,A,q_1]\rightarrow 0[q_0,A,q_1][q_1,A,q_1]\\
+	  [q_0,A,q_2]\rightarrow 0[q_0,A,q_1][q_1,A,q_2]\\
+	  [q_0,A,q_0]\rightarrow 0[q_0,A,q_2][q_2,A,q_0]\\
+	  [q_0,A,q_1]\rightarrow 0[q_0,A,q_2][q_2,A,q_1]\\
+	  [q_0,A,q_2]\rightarrow 0[q_0,A,q_2][q_2,A,q_2]\\
+	  [q_0,A,q_1]\rightarrow 1 \qquad \qquad \qquad \qquad \\
+	  [q_1,A,q_1]\rightarrow 1 \qquad \qquad \qquad \qquad
+	  \end{aligned}
+	  \qquad \qquad
+	  \begin{aligned}[c]
+	  [q_1,R,q_0]\rightarrow 1[q_1,B,q_0][q_0,R,q_0]\\
+	  [q_1,R,q_1]\rightarrow 1[q_1,B,q_0][q_0,R,q_1]\\
+	  [q_1,R,q_2]\rightarrow 1[q_1,B,q_0][q_0,R,q_2]\\
+	  [q_1,R,q_0]\rightarrow 1[q_1,B,q_1][q_1,R,q_0]\\
+	  [q_1,R,q_1]\rightarrow 1[q_1,B,q_1][q_1,R,q_1]\\
+	  [q_1,R,q_2]\rightarrow 1[q_1,B,q_1][q_1,R,q_2]\\
+	  [q_1,R,q_0]\rightarrow 1[q_1,B,q_2][q_2,R,q_0]\\
+	  [q_1,R,q_1]\rightarrow 1[q_1,B,q_2][q_2,R,q_1]\\
+	  [q_1,R,q_2]\rightarrow 1[q_1,B,q_2][q_2,R,q_2]\\
+	  [q_1,B,q_0]\rightarrow 1[q_1,B,q_0][q_0,B,q_0]\\
+	  [q_1,B,q_1]\rightarrow 1[q_1,B,q_0][q_0,B,q_1]\\
+	  [q_1,B,q_2]\rightarrow 1[q_1,B,q_0][q_0,B,q_2]\\
+	  [q_1,B,q_0]\rightarrow 1[q_1,B,q_1][q_1,B,q_0]\\
+	  [q_1,B,q_1]\rightarrow 1[q_1,B,q_1][q_1,B,q_1]\\
+	  [q_1,B,q_2]\rightarrow 1[q_1,B,q_1][q_1,B,q_2]\\
+	  [q_1,B,q_0]\rightarrow 1[q_1,B,q_2][q_2,B,q_0]\\
+	  [q_1,B,q_1]\rightarrow 1[q_1,B,q_2][q_2,B,q_1]\\
+	  [q_1,B,q_2]\rightarrow 1[q_1,B,q_2][q_2,B,q_2]\\
+	  [q_q,B,q_2]\rightarrow 0 \qquad \qquad \qquad \qquad \\
+	  [q_2,B,q_2]\rightarrow 0 \qquad \qquad \qquad \qquad \\
+	  [q_2,R,q_2]\rightarrow 1 \qquad \qquad \qquad \qquad
+	\end{aligned}
+	\end{equation*}
+	
+Ahora eliminamos todas aquellas producciones que son inútiles, de manera que la gramática definitiva queda:
+
+\[\mathcal{G}=\{V,\{0,1\},P,\{S\}\}\]
+
+donde:
+	\[V=\left\{\begin{array}{c}
+	  			S,[q_0,R,q_2],[q_0,A,q_2],[q_2,R,q_2],[q_2,A,q_2], \\
+	  			\lbrack q_0,A,q_1],[q_1,A,q_1],[q_1,R,q_2],[q_1,B,q_2],\\
+	  			\lbrack q_2,B,q_2], [q_1,B,q_2],[q_2,B,q_2],[q_2,R,q_2]
+	  		\end{array}\right\}\]
+	  		
+Y donde:
+
+	  \[P=\left\{\begin{array}{c} 
+	  			 S\rightarrow [q_0,R,q_2],\\
+	  			 \lbrack q_0,R,q_2]\rightarrow 0[q_0,A,q_2][q_2,R,q_2],\\
+	  			 \lbrack q_0,A,q_2]\rightarrow 0[q_0,A,q_2][q_2,A,q_2],\\
+	  			 \lbrack q_0,A,q_1]\rightarrow 1, \\
+	  			 \lbrack q_1,A,q_1]\rightarrow 1,\\
+	  			 \lbrack q_1,R,q_2]\rightarrow 1[q_1,B,q_2][q_2,R,q_2],\\
+	  			 \lbrack q_1,B,q_2]\rightarrow 1[q_1,B,q_2][q_2,B,q_2],
+	  			 \lbrack [q_1,B,q_2]\rightarrow 0, \\
+	  			 \lbrack q_2,B,q_2]\rightarrow 0,\\
+	  			 \lbrack q_2,R,q_2]\rightarrow 1
+	\end{array}\right\}\]
 
 \newpage
 
@@ -1220,7 +1300,7 @@ Por tanto, la expresión regular del lenguaje generado es:
 	
 \subsubsection{Ejercicio 3.} Piensa en un problema de la vida real en el que se pudiese aplicar los conocimientos vistos hoy en clase. Al igual que el ejemplo de la oficina de hoy, imagina y describe una gramática que se pueda utilizar para resolver dicho problema real.\\
 
-Se puede hacer para un problema de logística donde se contronlen los caminos y las rutas por las que viajan los camiones/furgonetas. Para simplificar el problema, supondremos que hay, por ejemplo, cuatro rutas ($R$) posibles: $a$, $b$, $c$ y $d$, y que están conetadas entre ellas, es decir, que un camión puede comenzar desde la ruta inicial $i$ hacia, por ejemplo, la ruta $b$ y de ésta pasar a la ruta $d$, y que el camión puede repetir las rutas todas las veces que desee.\\
+Se puede hacer para un problema de logística donde se contronlen los caminos y las rutas por las que viajan los camiones/furgonetas. Para simplificar el problema, supondremos que hay, por ejemplo, cuatro rutas ($R$) posibles: $a$, $b$, $c$ y $d$, y que están conectadas entre ellas, es decir, que un camión puede comenzar desde la ruta inicial $i$ hacia, por ejemplo, la ruta $b$ y de ésta pasar a la ruta $d$, y que el camión puede repetir las rutas todas las veces que desee.\\
 
 La gramática se define como sigue:
 
@@ -1546,24 +1626,7 @@ Definir para dichos autómata $Q$, $q_0$, $\delta$, $F$.\\
 
 \subsection{Semana del 22 de octubre de 2018}
 
-\subsubsection{Ejercicio 10.} Pasar a un autómata finito determinista:
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,scale = 1,transform shape]
-	\node[state,initial] (s0) {$s_0$}; 
-	\node[state,accepting] (s1) [right=of s0] {$s_1$}; 
-	\node[state] (s2) [below right=of s0] {$s_2$};
-	
-	\draw 	(s0) edge[loop above] node{a,b} (s0)
-			(s0) edge[above] node{a} (s2)
-			(s1) edge[bend right, above] node{b} (s0)
-			(s1) edge[loop above] node{a} (s1)
-			(s2) edge[right] node{a,b} (s1);
-\end{tikzpicture}
-\end{figure}
-
-\subsubsection{Ejercicio 11.} Pasar a AFD
+\subsubsection{Ejercicio 10.} Pasar a AFD
 
 \begin{figure}[H]
 \centering
@@ -1619,7 +1682,7 @@ El procedimiento a seguir es el siguiente: se extraen por ejemplo los estados de
 
 \subsection{Semana del 29 de octubre de 2018}
 
-\subsubsection{Ejercicio 12.} Diseñar un autómata finito de estados que dada una entrada en el alfabeto {0,1}, escriba en la salida 1 si encuentra el patrón de entrada 101, en caso contrario que escriba 0.
+\subsubsection{Ejercicio 11.} Diseñar un autómata finito de estados que dada una entrada en el alfabeto {0,1}, escriba en la salida 1 si encuentra el patrón de entrada 101, en caso contrario que escriba 0.
 	\begin{enumerate}
 	\item Realizar el diseño del autómata en papel.
 	\item Implementar dicho autómata en el lenguaje de 				programación que se desee.
@@ -1665,7 +1728,7 @@ El desarrollo del ejercicio es el que sigue:
 	\end{lstlisting}
 	\end{enumerate}
 	
-\subsubsection{Ejercicio 13.} Diseñar un autómata finito de estados con una salida y con una entrada. La salida se pone a 'x' cuando al menos ha encontrado dos '1' y dos '0' en la entrada, sin importar el orden de aparición.\\
+\subsubsection{Ejercicio 12.} Diseñar un autómata finito de estados con una salida y con una entrada. La salida se pone a 'x' cuando al menos ha encontrado dos '1' y dos '0' en la entrada, sin importar el orden de aparición.\\
 
 Este autómata se va a diseñar con forma de matriz de manera que se vea claramente el funcionamiento. Cuando no se cumplen las condiciones, se escribe $y$ en la salida. Una vez conseguidas las condiciones, se escribe $x$ en la salida. El diseño es este:
 
@@ -1698,21 +1761,5 @@ Este autómata se va a diseñar con forma de matriz de manera que se vea clarame
 				
 		\end{tikzpicture}
 	\end{figure}
-	
-\subsection{Semana del 5 de noviembre de 2018}
-
-\subsubsection{Ejercicio 14.} Indicar si los siguientes lenguajes son regulares o no. Justificando la respuesta.
-	\begin{enumerate}
-		\item $L_1=\{0^i1^j:j\leq i\}$
-
-		\[z\in \mathcal(L) \implies A=\{0,1,c\}
-		\exists n \in \mathbb{N} / z=0^n1^m=uvw donde n=m\]
-		
-\end{enumerate}				
-		
-%		\item $L_2=\{0^i1^j\cup 1^i0^j:i<j y j<10\}$
-%		\item $L_3=\{a^icb^j:j\leq j+3\}$
-		
-%	\end{enumerate}
 
 \end{document}
